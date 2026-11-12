@@ -1,0 +1,21 @@
+{
+  "years": [
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "best_model": "ridge_all",
+  "best_r2": 0.7068249527868735,
+  "H2_best_r2_ge_0.40": true,
+  "H3_gbm_vs_har_p": 1.1226324725198153e-26,
+  "H3_gbm_better_years": 4,
+  "H3_ml_helps": true,
+  "noise_ranks": {
+    "noise1": 23.25,
+    "noise2": 23.5
+  },
+  "n_features": 25,
+  "noise_in_bottom_quarter": true,
+  "auc_big_move_from_gbm_vol": 0.6661683476671212
+}

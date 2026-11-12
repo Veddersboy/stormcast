@@ -1,0 +1,32 @@
+{
+  "label": "v2 is post hoc: designed after the pre-registered final results; 2016-2019 numbers are not pre-registered",
+  "years": [
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019
+  ],
+  "r2_all": {
+    "har": 0.7463,
+    "gbm_prereg": 0.7817,
+    "gbm_tuned": 0.7862,
+    "stormnet": 0.7918,
+    "ensemble": 0.7938
+  },
+  "best_model_all": "ensemble",
+  "aci_coverage_all": 0.8944691958057693,
+  "aci_worst_rolling_250": 0.844,
+  "stormnet_dir_auc_all": 0.5030767421023389,
+  "stormnet_dir_auc_ci": [
+    0.49563613891805464,
+    0.509152446284535
+  ],
+  "post_hoc_r2_ensemble_vs_prereg_gbm": [
+    0.8339713725408722,
+    0.8254556292763063
+  ]
+}

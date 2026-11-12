@@ -1,0 +1,45 @@
+[project]
+name = "stormcast"
+version = "0.2.0"
+description = "Machine-learning weather forecasts for S&P 500 futures: what ML can and cannot predict in 1-minute data"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy==2.1.3",
+    "pandas==2.2.3",
+    "pyarrow==18.1.0",
+    "scikit-learn==1.5.2",
+    "scipy==1.14.1",
+    "matplotlib==3.9.2",
+    "hmmlearn==0.3.3",
+    "torch==2.5.1",
+    "optuna==4.1.0",
+    "streamlit==1.40.2",
+    "plotly==5.24.1",
+    "shap==0.46.0",
+    "fastapi==0.115.5",
+    "uvicorn==0.32.1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx==0.28.1",
+    "pytest==8.3.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
+
+[project.scripts]
+stormcast = "stormcast.cli:main"
+
+[build-system]
+requires = ["hatchling==1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stormcast"]
+
+[tool.uv]
+package = true

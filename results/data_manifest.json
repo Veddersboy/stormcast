@@ -1,0 +1,10 @@
+{
+  "bars_sha256": "c813354e0746546f7daddbe12b1ebbc13c6b2138fe528cb2bb6046a0807707d7",
+  "bars_rows": 3095644,
+  "first_session": "2010-06-07",
+  "last_session": "2019-05-21",
+  "decision_points": 27432,
+  "valid": 26880,
+  "days": 2286,
+  "dataset_sha256": "62e1d6281659721daaf01a780005c4a39737673c9f07589a2f22727ed15cc940"
+}

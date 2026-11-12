@@ -1,0 +1,8 @@
+year 2012: 25923 train rows, R2 0.573 on standard slots, 157s
+year 2013: 42647 train rows, R2 0.642 on standard slots, 241s
+year 2014: 59435 train rows, R2 0.746 on standard slots, 402s
+year 2015: 75814 train rows, R2 0.776 on standard slots, 519s
+year 2016: 92826 train rows, R2 0.805 on standard slots, 667s
+year 2017: 109870 train rows, R2 0.606 on standard slots, 720s
+year 2018: 126748 train rows, R2 0.860 on standard slots, 738s
+year 2019: 143661 train rows, R2 0.735 on standard slots, 1054s

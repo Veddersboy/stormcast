@@ -1,0 +1,11 @@
+{
+  "years": [
+    2016,
+    2017,
+    2018,
+    2019
+  ],
+  "aci_coverage": 0.8999609222352482,
+  "H4_aci_within_1.5pp": true,
+  "H4_aci_worst_rolling_above_cqr": true
+}

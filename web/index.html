@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stormcast</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛈</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">⛈</span>Stormcast<span class="ver">v2</span></div>
+  <nav id="nav">
+    <button data-view="replay" class="active">🌩 Storm replay <kbd>1</kbd></button>
+    <button data-view="arena">🏟 Model arena <kbd>2</kbd></button>
+    <button data-view="trust">🎯 Trust <kbd>3</kbd></button>
+    <button data-view="risk">🛡 Risk desk <kbd>4</kbd></button>
+    <button data-view="leak">🧪 Leak lab <kbd>5</kbd></button>
+    <button data-view="forecast">🔮 Forecast <kbd>6</kbd></button>
+    <button data-view="method">🧠 How it works <kbd>7</kbd></button>
+  </nav>
+  <div class="top-right">
+    <span class="pill live">walk-forward</span>
+    <button class="iconbtn" id="fs" title="Full screen (F)">⛶</button>
+  </div>
+</header>
+
+<main id="app">
+  <div class="loading" id="loading">Loading the forecasts…</div>
+
+  <!-- ================================================================ replay -->
+  <section class="view" id="view-replay">
+    <h1>A weather forecast for the <em>stock market</em>.</h1>
+    <p class="lede">Machine learning on 3.1 million one-minute E-mini S&amp;P 500 futures bars. It forecasts <b>how much</b>
+      the market will move in the next 30 minutes, and shows honestly that it cannot forecast <b>which way</b>.</p>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card controls">
+      <div class="ctl-top">
+        <div class="chips" id="presets"></div>
+        <input type="date" class="datepick" id="datepick" title="Any trading day 2012–2019">
+      </div>
+      <div class="ctl-bottom">
+        <div class="clock" id="clock">10:00<small>ET</small></div>
+        <input type="range" id="slider" min="0" max="66" value="0">
+        <div class="transport">
+          <button class="tbtn" id="prev" title="Back 5 min (←)">◀</button>
+          <button class="tbtn play" id="play" title="Play / pause (space)">▶</button>
+          <button class="tbtn" id="next" title="Forward 5 min (→)">▶</button>
+          <div class="seg" id="speed"><button data-s="1" class="on">1×</button><button data-s="2">2×</button><button data-s="4">4×</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="daybar" id="daybar"></div>
+
+    <div class="replay">
+      <div class="grid">
+        <div class="card"><h3 id="price-title">ES futures</h3><div id="chart-price" class="chart" style="height:430px"></div></div>
+        <div class="card"><h3>Volatility, next 30 minutes <span class="cap">annualized %, like the VIX · only what was known at the time</span></h3><div id="chart-vol" class="chart" style="height:230px"></div></div>
+      </div>
+      <div class="card report" id="report"></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <h3>🔍 What StormNet looked at: attention over the last 4 hours of bars</h3>
+        <div id="chart-attn" class="chart" style="height:250px"></div>
+        <div class="cap">The Transformer's attention-pooling layer decides which 4-minute tokens of the window to summarize.
+          Bursts of activity, the open and the overnight session tend to draw the weight.</div>
+      </div>
+      <div class="card">
+        <h3>🎛 What if…? Change the inputs and re-run the gradient-boosting model live</h3>
+        <div class="whatif" style="grid-template-columns:1fr 1fr">
+          <div class="field"><label>VIX <b id="wi-vix-v"></b></label><input type="range" id="wi-vix" min="9" max="50" step="0.5"></div>
+          <div class="field"><label>Last 30 min volatility <b id="wi-mult-v"></b></label><input type="range" id="wi-mult" min="-2" max="2" step="0.25" value="0"></div>
+          <div class="field"><label>Time of day <b id="wi-k-v"></b></label><input type="range" id="wi-k" min="0" max="66" step="1"></div>
+          <div class="field"><label>FOMC announcement day</label><span class="toggle" id="wi-fomc"><span class="switch"></span><span>off</span></span></div>
+        </div>
+        <div style="display:flex; gap:24px; align-items:end; margin-top:14px">
+          <div><div class="cap" style="margin:0">Forecast with your inputs</div><div class="result-big" id="wi-new">–</div></div>
+          <div><div class="cap" style="margin:0">with the real inputs</div><div style="font-size:20px;font-weight:700;color:var(--muted)" id="wi-base">–</div></div>
+          <button class="btn ghost" id="wi-reset" style="margin-left:auto">Reset</button>
+        </div>
+        <div class="bars" id="wi-drivers" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ arena -->
+  <section class="view" id="view-arena">
+    <h2>Five forecasters, one honest walk-forward test</h2>
+    <p class="lede">Each year is forecast by models trained only on earlier years, with a one-day embargo. 2012–2015 are
+      development years; 2016–2019 were the pre-registered one-shot test, so v2 numbers there are labelled <b>post hoc</b>.</p>
+    <div class="card"><table id="board"></table></div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><div id="chart-years" style="height:340px"></div></div>
+      <div class="card"><div id="chart-weights" style="height:340px"></div>
+        <div class="cap">Weights can sum past 1: every member is too timid in storms (shrunk toward the average), and the stacker,
+          fit only on earlier years, learned to stretch them. That stretch improves out-of-sample R² in every year tested.</div></div>
+      <div class="card"><div id="chart-tuning" style="height:300px"></div>
+        <div class="cap">Optuna's TPE sampler searches gradient-boosting hyperparameters on a time split <i>inside</i> each
+          training window, starting from the pre-registered setting.</div></div>
+      <div class="card"><div id="chart-training" style="height:300px"></div>
+        <div class="cap">Each StormNet seed early-stops on the last 10% of its training window, by time.</div></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ trust -->
+  <section class="view" id="view-trust">
+    <h2>A forecast is only useful if you know when to trust it</h2>
+    <p class="lede">Two checks: do the 90% intervals really contain 90% of outcomes, including when volatility jumps? And when
+      the model says it is unsure, is it?</p>
+    <div class="grid g2">
+      <div class="card"><div id="chart-coverage" style="height:360px"></div>
+        <div class="cap">Adaptive conformal inference widens the interval after every miss and narrows it after every hit.
+          Outcomes are fed back only once they are known (30 minutes later).</div></div>
+      <div class="card"><div id="chart-cal" style="height:360px"></div><div class="cap" id="cal-cap"></div></div>
+      <div class="card"><div id="chart-covvix" style="height:280px"></div></div>
+      <div class="card"><div id="chart-covyear" style="height:280px"></div></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ risk -->
+  <section class="view" id="view-risk">
+    <h2>What a volatility forecast is worth: surviving a daily loss limit</h2>
+    <p class="lede">Hold one long ES position in every 30-minute slot. Compare constant size with size ∝ 1 / forecast volatility,
+      both scaled to the same average size. This measures <b>risk control</b>, not an edge.</p>
+    <div class="grid" style="grid-template-columns: 330px 1fr">
+      <div class="grid" style="align-content:start">
+        <div class="card">
+          <div class="field"><label>Daily loss limit (× average daily swing) <b id="lim-v"></b></label>
+            <input type="range" id="lim" min="1.5" max="5" step="0.25" value="3"></div>
+          <div class="field" style="margin-top:14px"><label>Size positions by</label>
+            <div class="seg" id="sizer"><button data-m="ensemble" class="on">Ensemble</button><button data-m="stormnet">StormNet</button><button data-m="har">HAR</button></div></div>
+        </div>
+        <div class="card kpi"><div class="l">Limit breaches, constant size</div><div class="v bad" id="br-c">–</div><div class="s" id="br-c-s"></div></div>
+        <div class="card kpi"><div class="l">Limit breaches, forecast-sized</div><div class="v good" id="br-f">–</div><div class="s" id="br-f-s"></div></div>
+        <div class="card kpi"><div class="l">Worst day</div><div class="v" id="worst" style="font-size:22px">–</div><div class="s">constant → forecast-sized (points)</div></div>
+      </div>
+      <div class="grid">
+        <div class="card"><div id="chart-rollrisk" style="height:300px"></div></div>
+        <div class="card"><div id="chart-worst" style="height:300px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ leak -->
+  <section class="view" id="view-leak">
+    <h2>How easy is it to fool yourself?</h2>
+    <p class="lede">Most "AI predicts the stock market" results come from pipelines that leak the future. Here is one, live: the
+      <b>same random forest</b>, on the <b>same rows</b>, validated two ways.</p>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap">
+        <div class="cap" style="margin:0; max-width:760px">33,000 decision points from 2014–2015, every 5 minutes, predicting the direction of the next
+          30 minutes. Neighbouring rows' labels overlap by 25 minutes. Shuffled cross-validation puts those neighbours in both
+          the training and the test folds; walk-forward trains on 2014 and tests on 2015.</div>
+        <button class="btn" id="leak-run">Run the experiment</button>
+      </div>
+      <div class="duel">
+        <div class="card"><div class="what">Shuffled 5-fold cross-validation</div><div class="big" id="leak-shuf">?</div><div class="what" id="leak-shuf-s">AUC</div></div>
+        <div class="card"><div class="what">Walk-forward: train 2014 → test 2015</div><div class="big" id="leak-wf">?</div><div class="what" id="leak-wf-s">AUC</div></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><div id="chart-leaks" style="height:360px"></div>
+        <div class="cap">Six mistakes planted in the honest pipeline (development years). Centered windows and overlapping labels
+          with shuffled CV turn a coin flip into a "great" model.</div></div>
+      <div class="card"><div id="chart-dir" style="height:360px"></div><div class="cap" id="dir-cap"></div></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ forecast -->
+  <section class="view" id="view-forecast">
+    <h2>Ask Stormcast about any moment</h2>
+    <p class="lede">Pick a trading day and a decision time. The engine rebuilds every feature from bars that closed before that
+      minute and answers with the models that existed then: trained only on earlier years.</p>
+    <div class="console">
+      <div class="card">
+        <h3>Decision time (ET)</h3>
+        <div class="formrow"><input type="date" id="fc-date"><select id="fc-time"></select></div>
+        <button class="btn" id="fc-go" style="width:100%">Forecast the next 30 minutes</button>
+        <div class="cap" style="margin-top:14px">Try:</div>
+        <div class="chips" id="fc-examples" style="margin-top:6px"></div>
+        <div class="cap" style="margin-top:16px">Same engine as the command line:<br><span class="mono">uv run stormcast forecast "2018-02-05 15:00"</span></div>
+      </div>
+      <div class="term" id="fc-out"><span class="p">$</span> stormcast forecast …</div>
+    </div>
+  </section>
+
+  <!-- ================================================================ method -->
+  <section class="view" id="view-method">
+    <h2>How it works</h2>
+    <p class="lede">One pipeline, built so that nothing can see the future: every feature is computed from bars that closed
+      before the decision, every model is trained only on earlier years, and every interval is updated only with outcomes
+      that are already known.</p>
+    <div class="arch">
+      <div class="node"><b>Data</b>3.1M one-minute ES futures bars (2010–2019), prior-day VIX, FOMC calendar. Point-in-time
+        truncation tests on every feature.</div>
+      <div class="node"><b>25 features</b>HAR volatility components, time-of-day profile, VIX, ranges, returns, volume, calendar,
+        plus two pure-noise columns as a sanity check.</div>
+      <div class="node hl"><b>StormNet</b>Dilated temporal convolutions → Transformer self-attention over 240 one-minute bars,
+        fused with the features. Heads: heteroscedastic volatility, non-crossing range quantiles, direction. 3-seed deep
+        ensemble on Apple-silicon GPU.</div>
+      <div class="node"><b>Ensemble</b>HAR + gradient boosting (Optuna-tuned in each window, exact TreeSHAP) + StormNet, stacked
+        with non-negative weights fit on earlier years' out-of-sample forecasts.</div>
+      <div class="node"><b>Trust layer</b>Adaptive conformal intervals with delayed feedback; aleatoric + epistemic uncertainty;
+        3-state hidden Markov regimes (filtered, never smoothed).</div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>What makes it honest</h3><ul class="clean">
+        <li><b>Walk-forward</b> by calendar year, expanding window, one-day embargo.</li>
+        <li><b>Pre-registered</b> original study: hypotheses and the 2016–2019 test fixed before any model was fit, run once
+          from a frozen git tag. v2 is labelled post hoc.</li>
+        <li><b>Tuning inside the window</b>: Optuna never sees the test year.</li>
+        <li><b>Leak tests</b>: features rebuilt from truncated data must match; a planted look-ahead must fail.</li>
+        <li><b>Noise features</b> rank last in importance, as they should.</li>
+      </ul></div>
+      <div class="card"><h3>The one-sentence result</h3>
+        <p style="font-size:20px; line-height:1.5; margin:4px 0 12px; font-weight:600">On identical inputs, machine learning explains about
+          <span class="warn" id="m-r2">80%</span> of the variation in the <i>size</i> of the next 30-minute move, and essentially
+          none of its <i>direction</i>.</p>
+        <p class="cap" style="font-size:14px">That is the efficient-market hypothesis, measured: predictable price changes get traded
+          away, but nothing arbitrages away volatility clustering. ML's value here is risk: sizing, stops, and knowing when the
+          weather is turning.</p></div>
+    </div>
+  </section>
+</main>
+<div class="hint"><kbd>1</kbd>–<kbd>7</kbd> views · <kbd>space</kbd> play · <kbd>←</kbd><kbd>→</kbd> step · <kbd>R</kbd> reveal · <kbd>F</kbd> full screen</div>
+
+<script src="vendor/plotly.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

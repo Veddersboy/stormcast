@@ -1,0 +1,11 @@
+{
+  "years": [
+    2016,
+    2017,
+    2018,
+    2019
+  ],
+  "H7_lower_kurtosis": true,
+  "H7_fewer_breaches_3x": true,
+  "H7_supported": true
+}

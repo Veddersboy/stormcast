@@ -1,0 +1,21 @@
+{
+  "years": [
+    2016,
+    2017,
+    2018,
+    2019
+  ],
+  "best_model": "gbm",
+  "best_r2": 0.8254556292763063,
+  "H2_best_r2_ge_0.40": true,
+  "H3_gbm_vs_har_p": 6.160349796290997e-35,
+  "H3_gbm_better_years": 4,
+  "H3_ml_helps": true,
+  "noise_ranks": {
+    "noise1": 23.0,
+    "noise2": 24.25
+  },
+  "n_features": 25,
+  "noise_in_bottom_quarter": true,
+  "auc_big_move_from_gbm_vol": 0.6913007848644629
+}

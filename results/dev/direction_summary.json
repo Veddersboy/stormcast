@@ -1,0 +1,15 @@
+{
+  "years": [
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "up_share": 0.49261576971214016,
+  "max_honest_auc": 0.5067869611643,
+  "too_good": false,
+  "H1_all_auc_in_0.48_0.52": true,
+  "H1_all_ci_contain_0.5": true,
+  "H1_logloss_skill_le_0": false,
+  "H1_gross_below_cost": true
+}

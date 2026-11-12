@@ -1,0 +1,15 @@
+{
+  "years": [
+    2016,
+    2017,
+    2018,
+    2019
+  ],
+  "up_share": 0.5107463853067604,
+  "max_honest_auc": 0.5223687623902751,
+  "too_good": false,
+  "H1_all_auc_in_0.48_0.52": false,
+  "H1_all_ci_contain_0.5": false,
+  "H1_logloss_skill_le_0": false,
+  "H1_gross_below_cost": true
+}
